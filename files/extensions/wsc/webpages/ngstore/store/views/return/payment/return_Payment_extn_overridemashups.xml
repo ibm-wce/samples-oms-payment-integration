@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright IBM Corp. 2017
+  
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+  
+   http://www.apache.org/licenses/LICENSE-2.0
+  
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<mashups>
+    <mashup
+        description="This mashup is called when Pay button is clicked on Refund Payment screen to capture payment, process payment and confirm the return/exchange order on one click. 
+        The input and output of the API are modified in this mashup. When calling the API, the input is called to mask secured parameters. 
+        The output is then processed to fetch the valid and invalid payment methods and show error accordingly. If no errors found, the order is confirmed and success output is returned back.
+        Both for return and exchange order, if present, capturePayment, processOrderPayments and confirmDraftOrder APIs will be called."
+        endpoint="EP_ORDER" id="wsc_returnOrder_oneClickCapturePayAndRefundConfirm"
+        mashuptype="XAPI" skipDataProvider="false" transactional="false">
+        <classInformation name="com.ibm.integration.payment.mashup.ExtnOneClickProcessRefundMashup"/>
+        <API Name="capturePayment">
+            <Input>
+                <CapturePayment
+                    DisplayLocalizedFieldInLocale="xml:CurrentUser:/User/@Localecode"
+                    DocumentType="" EnterpriseCode="" OrderHeaderKey=""
+                    OrderNo="" ProceedOnZeroAmountFailure="">
+                    <PaymentMethods>
+                        <PaymentMethod BillToKey="" ChargeSequence=""
+                            CheckNo="" CheckReference=""
+                            CreditCardExpDate="" CreditCardName=""
+                            CreditCardNo="" CreditCardType=""
+                            CustomerAccountNo="" CustomerPONo=""
+                            DisplayCreditCardNo=""
+                            DisplayCustomerAccountNo=""
+                            DisplayPaymentReference1=""
+                            DisplayPrimaryAccountNo="" DisplaySvcNo=""
+                            FirstName="" IsCorrection="" IsCustomer=""
+                            LastName="" MaxChargeLimit="" MiddleName=""
+                            Operation="" PaymentKey=""
+                            PaymentReference1="" PaymentReference2=""
+                            PaymentReference3="" PaymentType=""
+                            PrimaryAccountNo="" RequestedAmount=""
+                            ResetSuspensionStatus="" SvcNo="" SecureAuthenticationCode="">
+                            <PersonInfoBillTo AddressID=""
+                                AddressLine1="" AddressLine2=""
+                                AddressLine3="" AddressLine4=""
+                                AddressLine5="" AddressLine6=""
+                                AlternateEmailID="" Beeper="" City=""
+                                Company="" Country="" DayFaxNo=""
+                                DayPhone="" Department="" EMailID=""
+                                EveningFaxNo="" EveningPhone=""
+                                FirstName="" IsAddressVerified=""
+                                IsCommercialAddress="" JobTitle=""
+                                LastName="" Latitude="" Longitude=""
+                                MiddleName="" MobilePhone=""
+                                OtherPhone="" PersonID=""
+                                PersonInfoKey="" State="" Suffix=""
+                                TaxGeoCode="" Title="" ZipCode=""/>
+                        </PaymentMethod>
+                    </PaymentMethods>
+                    <ExchangeOrders>
+	                    <ExchangeOrder DocumentType="" EnterpriseCode="" OrderHeaderKey=""
+	                    OrderNo="" ProceedOnZeroAmountFailure="">
+	                    	<PaymentMethods>
+		                        <PaymentMethod BillToKey="" ChargeSequence=""
+		                            CheckNo="" CheckReference=""
+		                            CreditCardExpDate="" CreditCardName=""
+		                            CreditCardNo="" CreditCardType=""
+		                            CustomerAccountNo="" CustomerPONo=""
+		                            DisplayCreditCardNo=""
+		                            DisplayCustomerAccountNo=""
+		                            DisplayPaymentReference1=""
+		                            DisplayPrimaryAccountNo="" DisplaySvcNo=""
+		                            FirstName="" IsCorrection="" IsCustomer=""
+		                            LastName="" MaxChargeLimit="" MiddleName=""
+		                            Operation="" PaymentKey=""
+		                            PaymentReference1="" PaymentReference2=""
+		                            PaymentReference3="" PaymentType=""
+		                            PrimaryAccountNo="" RequestedAmount=""
+		                            ResetSuspensionStatus="" SvcNo="" SecureAuthenticationCode="">
+		                            <PersonInfoBillTo AddressID=""
+		                                AddressLine1="" AddressLine2=""
+		                                AddressLine3="" AddressLine4=""
+		                                AddressLine5="" AddressLine6=""
+		                                AlternateEmailID="" Beeper="" City=""
+		                                Company="" Country="" DayFaxNo=""
+		                                DayPhone="" Department="" EMailID=""
+		                                EveningFaxNo="" EveningPhone=""
+		                                FirstName="" IsAddressVerified=""
+		                                IsCommercialAddress="" JobTitle=""
+		                                LastName="" Latitude="" Longitude=""
+		                                MiddleName="" MobilePhone=""
+		                                OtherPhone="" PersonID=""
+		                                PersonInfoKey="" State="" Suffix=""
+		                                TaxGeoCode="" Title="" ZipCode=""/>
+		                        </PaymentMethod>
+		                    </PaymentMethods>
+	                    </ExchangeOrder>
+	            	</ExchangeOrders>
+                </CapturePayment>
+            </Input>
+            <Template>
+                 <Order BillToID="" BillToKey="" BuyerOrganizationCode=""
+	                BuyerUserId="" CustomerContactID=""
+	                CustomerFirstName="" CustomerLastName=""
+	                DocumentType="" DraftOrderFlag="" EnterpriseCode=""
+	                ExchangeType="" 
+	                OrderDate="" OrderHeaderKey="" OrderName=""
+	                OrderNo="" OrderPurpose="" ShipToKey="" PendingTransferIn="" SellerOrganizationCode="">
+	                <PersonInfoBillTo AddressLine1="" AddressLine2=""
+	                    AddressLine3="" AddressLine4="" AddressLine5=""
+	                    AddressLine6="" AlternateEmailID="" Beeper=""
+	                    City="" Company="" Country="" DayFaxNo=""
+	                    DayPhone="" Department="" EMailID=""
+	                    EveningFaxNo="" EveningPhone="" FirstName=""
+	                    IsCommercialAddress="" JobTitle="" LastName=""
+	                    MiddleName="" MobilePhone="" OtherPhone=""
+	                    PersonID="" PersonInfoKey="" State="" Suffix=""
+	                    TaxGeoCode="" Title="" ZipCode=""/>
+	                <PersonInfoShipTo AVSMode="" AddressID=""
+                        AddressLine1="" AddressLine2="" AddressLine3="" AddressLine4=""
+                        AddressLine5="" AddressLine6="" AlternateEmailID="" Beeper="" City=""
+                        Company="" Country="" CountryDesc="" DayFaxNo="" DayPhone="" Department="" EMailID=""
+                        EnterpriseCode="" EveningFaxNo="" EveningPhone="" FirstName="" HttpUrl=""
+                        IsAddressVerified="" IsCommercialAddress="" JobTitle="" LastName="" Latitude="" 
+                        Longitude="" MiddleName="" MobilePhone="" 
+                        OtherPhone="" PersonID=""
+                        PersonInfoKey="" ShortZipCode="" State="" Suffix="" TaxGeoCode=""
+                        Title="" TitleDesc="" UseCount="" ZipCode="" isHistory=""/>
+                    <PaymentMethods>
+                        <PaymentMethod AwaitingAuthInterfaceAmount=""
+                            AwaitingChargeInterfaceAmount=""
+                            BillToKey="" ChargeSequence="" CheckNo=""
+                            CheckReference="" CreditCardExpDate=""
+                            CreditCardName="" CreditCardNo=""
+                            CreditCardType="" CustomerAccountNo=""
+                            CustomerPONo="" DisplayCreditCardNo=""
+                            DisplayCustomerAccountNo=""
+                            DisplayPaymentReference1=""
+                            DisplayPrimaryAccountNo="" DisplaySvcNo=""
+                            FirstName="" FundsAvailable=""
+                            GetFundsAvailableUserExitInvoked=""
+                            IncompletePaymentType="" IsCustomer=""
+                            LastName="" MaxChargeLimit="" MiddleName=""
+                            PaymentKey="" PaymentReference1=""
+                            PaymentReference2="" PaymentReference3=""
+                            PaymentType="" PaymentTypeGroup=""
+                            PlannedRefundAmount=""
+                            RequestedAuthAmount=""
+                            RequestedChargeAmount=""
+                            SuspendAnyMoreCharges="" SvcNo=""
+                            TotalAuthorized="" TotalCharged=""
+                            TotalRefundedAmount="" UnlimitedCharges="">
+                            <PersonInfoBillTo AddressLine1=""
+                                AddressLine2="" AddressLine3=""
+                                AddressLine4="" AddressLine5=""
+                                AddressLine6="" AlternateEmailID=""
+                                Beeper="" City="" Company="" Country=""
+                                DayFaxNo="" DayPhone="" Department=""
+                                EMailID="" EveningFaxNo=""
+                                EveningPhone="" FirstName=""
+                                IsCommercialAddress="" JobTitle=""
+                                LastName="" MiddleName="" MobilePhone=""
+                                OtherPhone="" PersonID=""
+                                PersonInfoKey="" State="" Suffix=""
+                                TaxGeoCode="" Title="" ZipCode=""/>
+                        </PaymentMethod>
+                    </PaymentMethods>
+                    <ChargeTransactionDetails TotalTransferredOut="" RemainingAmountToAuth="">
+                        <ChargeTransactionDetail PaymentKey="" Status="" TransactionDate="">
+                            <PaymentTransactionErrorList>
+                                <PaymentTransactionError Message="" MessageType=""/>
+                            </PaymentTransactionErrorList>
+                            <CreditCardTransactions>
+                                <CreditCardTransaction InternalReturnMessage=""/>
+                            </CreditCardTransactions>
+                        </ChargeTransactionDetail>
+                    </ChargeTransactionDetails>
+                    <RemainingFinancialTotals RemainingToAuthorize="" RemainingToCharge="" RemainingToRefund="">
+						<Filter InPerson="">
+							<RemainingFinancialTotals/>
+						</Filter>
+					</RemainingFinancialTotals>
+                    <PriceInfo Currency=""/>
+                    <ExchangeOrders>
+						<ExchangeOrder ExchangeType="" OrderHeaderKey="" />
+					</ExchangeOrders>
+					<ReturnOrdersForExchange>
+						<ReturnOrderForExchange OrderHeaderKey="" />
+					</ReturnOrdersForExchange>
+	                <OverallTotals AdjustedSubtotalWithoutTaxes=""
+	                    EnterpriseCode=""
+	                    GrandAdjustmentsWithoutTotalShipping=""
+	                    GrandDeliveryCharges="" GrandRefundTotal=""
+	                    GrandShippingTotal="" GrandTax="" GrandTotal=""
+	                    HdrShippingCharges="" GrandExchangeTotal=""
+	                    HeaderAdjustmentWithoutShipping=""
+	                    LineSubTotal="" OrderHeaderKey="" SubtotalWithoutTaxes=""/>
+                </Order>
+            </Template>
+        </API>
+        <APINamespace inputNS="wsc_returnOrder_oneClickCapturePayAndRefundConfirm_input" outputNS="wsc_returnOrder_oneClickCapturePayAndRefundConfirm_output"/>
+        <Config ScreenType="ConfirmOrder"/>
+        <AlternateResourceIds>
+            <AlternateResourceId altResourceId="WSC000033"/>
+        </AlternateResourceIds>
+    </mashup>
+</mashups>

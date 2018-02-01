@@ -1,0 +1,48 @@
+<!-- 
+   Copyright IBM Corp. 2017
+  
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+  
+   http://www.apache.org/licenses/LICENSE-2.0
+  
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<div class="form-group" style="display:none">
+	<div class="text-box">
+		<isc-input 
+				input-config-id = "pc_uniqueidentifier_{{uniqueIdSuffix}}" input-config-type = "text" input-config-isc-focus='mode == "add"'  input-config-class = "form-control" input-config-name = "paymentMethodForm_otherreference1"
+				input-config-ng-model = "paymentMethod.PaymentReference1" input-config-isc-datatype = "" input-config-ng-readonly = 'mode == "edit" && paymentMethod.IncompletePaymentType != "Y"'
+				label-config-isc-i18n = "payment.LABEL_PaymentReference1"
+				errorspan-config-ng-if = "(paymentMethodForm.$$parentForm.$submitted || paymentMethodForm.paymentMethodForm_otherreference1.$touched || paymentMethodForm.paymentMethodForm_otherreference1.$dirty) && (paymentMethodForm.paymentMethodForm_otherreference1.$error.iscDatatypeValidator || paymentMethodForm.paymentMethodForm_otherreference1.$error.iscCustomValidator)"
+				errorspan-config-ng-bind = "paymentMethodForm.paymentMethodForm_otherreference1.$error.iscValidation_msg">
+		 </isc-input>
+	</div>
+</div>
+<div class="form-group" style="display:none">
+	<div class="text-box">
+		<isc-input 
+				input-config-id = "pc_otherreference2_{{uniqueIdSuffix}}" input-config-type = "text" input-config-class = "form-control" input-config-name = "paymentMethodForm_otherreference2"
+				input-config-ng-model = "paymentMethod.PaymentReference2" input-config-isc-datatype = "" input-config-ng-readonly = 'mode == "edit" && paymentMethod.IncompletePaymentType != "Y"'
+				label-config-isc-i18n = "payment.LABEL_PaymentReference2"
+				errorspan-config-ng-if = "(paymentMethodForm.$$parentForm.$submitted || paymentMethodForm.paymentMethodForm_otherreference2.$touched || paymentMethodForm.paymentMethodForm_otherreference2.$dirty) && (paymentMethodForm.paymentMethodForm_otherreference2.$error.iscDatatypeValidator || paymentMethodForm.paymentMethodForm_otherreference2.$error.iscCustomValidator)"
+				errorspan-config-ng-bind = "paymentMethodForm.paymentMethodForm_otherreference2.$error.iscValidation_msg">
+		 </isc-input>
+	</div>
+</div>
+<div class="form-group" style="display:none">
+	<div class="text-box">
+		<isc-input 
+				input-config-id = "pc_otherreference3_{{uniqueIdSuffix}}" input-config-type = "text" input-config-class = "form-control" input-config-name = "paymentMethodForm_otherreference3"
+				input-config-ng-model = "paymentMethod.PaymentReference3" input-config-isc-datatype = "" input-config-ng-readonly = 'mode == "edit" && paymentMethod.IncompletePaymentType != "Y"'
+				label-config-isc-i18n = "payment.LABEL_PaymentReference3"
+				errorspan-config-ng-if = "(paymentMethodForm.$$parentForm.$submitted || paymentMethodForm.paymentMethodForm_otherreference3.$touched || paymentMethodForm.paymentMethodForm_otherreference3.$dirty) && (paymentMethodForm.paymentMethodForm_otherreference3.$error.iscDatatypeValidator || paymentMethodForm.paymentMethodForm_otherreference3.$error.iscCustomValidator)"
+				errorspan-config-ng-bind = "paymentMethodForm.paymentMethodForm_otherreference3.$error.iscValidation_msg">
+		 </isc-input>
+	</div>
+</div>

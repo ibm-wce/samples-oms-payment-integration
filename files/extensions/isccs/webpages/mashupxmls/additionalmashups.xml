@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright IBM Corp. 2017
+  
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+  
+   http://www.apache.org/licenses/LICENSE-2.0
+  
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<mashups>
+    <mashup description="" endpoint="EP_ORDER"
+        id="extn_isccs_paymentConfirmation_sendPaymentLink" mashuptype="XAPI"
+        resourceId="" transactional="true">
+        <API FlowName="InvokeRemotePayment">
+            <Input>
+                <Order OrderHeaderKey="" OrderNo="" TransactionType="RemotePay">
+                    <PersonInfoBillTo DayPhone="" EMailID=""
+                        EveningPhone="" FirstName=""
+                        LastName="" MobilePhone="" />
+                    <OverallTotals GrandTotal=""/>
+                    <PriceInfo Currency="" TotalAmount=""/>
+                </Order>
+            </Input>
+            <Template>
+                <Order OrderHeaderKey="" OrderNo="" TransactionId=""/>
+            </Template>
+        </API>
+        <classInformation name="com.ibm.isccs.common.mashups.SCCSBaseMashup"/>
+        <APINamespace inputNS="paymentConfirmation_sendPaymentLink_input" outputNS="paymentConfirmation_sendPaymentLink_output"/>
+        <AlternateResourceIds/>
+    </mashup>
+</mashups>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+   Copyright IBM Corp. 2017
+  
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+  
+   http://www.apache.org/licenses/LICENSE-2.0
+  
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<ExtensionMetaData>
+    <ScreenExtension extnClassName="PaymentConfirmationExtn"
+        extnPackage="extn.payment.confirmation"
+        originalScreen="isccs.payment.confirmation.PaymentConfirmation"
+        originalScreenPackage="isccs.payment.confirmation" type="diffrential">
+        <Items>
+            <ContentPane _sc_extensibility_operation="change"
+                _sc_extensibility_referenceUId="pnlOrderModificationTotals" renderHidden="true"/>
+            <Button _sc_extensibility_operation="change"
+                _sc_extensibility_referenceUId="btnAddPaymentMethod" renderHidden="true"/>
+            <Button _sc_extensibility_moveOrder="1"
+                _sc_extensibility_operation="insert"
+                _sc_extensibility_position="after"
+                _sc_extensibility_referenceUId="btnAddPaymentMethod"
+                label="$(_scSimpleBundle:extn_Send_Payment_Link)" uId="extn_sendPaymentLinkBtn"/>
+            <DataLabel _sc_extensibility_operation="change"
+                _sc_extensibility_referenceUId="lblAmountToRefund" renderHidden="true"/>
+        </Items>
+        <Subscribers>
+            <Local>
+                <Subscriber eventId="afterScreenInit" isExtn="true" sequence="51">
+                    <Handler methodName="fn_manageComponentVisibilityPostInit"/>
+                </Subscriber>
+                <Subscriber eventId="saveCurrentPage" isExtn="true" sequence="19">
+                    <Handler methodName="fn_extnSaveHandler"/>
+                </Subscriber>
+                <Subscriber
+                    description="Handler for send payment link button is clicked"
+                    eventId="extn_sendPaymentLinkBtn_onClick"
+                    isExtn="true" sequence="51">
+                    <Handler methodName="fn_sendPaymentLink"/>
+                </Subscriber>
+            </Local>
+        </Subscribers>
+        <MashupRefs>
+            <Behavior>
+                <MashupRef extnType="ADD"
+                    mashupId="extn_isccs_paymentConfirmation_sendPaymentLink" mashupRefId="extn_sendPaymentLink"/>
+            </Behavior>
+        </MashupRefs>
+    </ScreenExtension>
+</ExtensionMetaData>

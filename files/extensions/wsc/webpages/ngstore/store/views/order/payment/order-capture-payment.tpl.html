@@ -1,0 +1,233 @@
+<!-- 
+   Copyright IBM Corp. 2017
+  
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+  
+   http://www.apache.org/licenses/LICENSE-2.0
+  
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
+<div class="payment-screen-holder">
+<form novalidate class="payment-capture" name="paymentCaptureForm" ng-submit="paymentCaptureForm.$valid ? uiOneClickCapturePayConfirm() : uihandleScreenInvalid()">
+	<div class="screen-holder" role="region" isc-i18n="[aria-label]payment.aria_paymentHeaderRegion">
+		<div class="screen-header tile-layout">
+			<div>			
+				<div class="back-chevron">
+					<a href="#" id="goBack"
+						ng-if="$root.$showBackButtonForStates" ng-click="$emit('$backButtonClicked')" tabindex="0">
+			    		<span class="glyphicon glyphicon-chevron-left " aria-hidden="true"></span>
+			    		<span class="sr-only" isc-i18n="app.aria_backButton"></span>
+					</a>
+				</div>
+				
+				<span role="heading" aria-level="1" class="screen-header-text"	isc-i18n="[i18n]{{ui.screentitle}}"></span>
+				
+			</div>
+			<div>
+				<div class="action-holder pull-right" role="region" isc-i18n="[aria-label]payment.aria_paymentActionsRegion">
+					<div>
+						<button class="btn btn-secondary" type="button" role="button" ng-click="uiCancel()" >
+							<span class="app-glyphicons app-icon-cancel_action_30 btn-icon-font"></span>						
+							<span class="btn-text" isc-i18n="globals.ACTION_Close"></span>						
+						</button>
+					</div>
+					<div>
+						<button ng-disabled="ui.remainingAmount > 0"  ng-if="model.getCompleteOrderDetails.Order.DraftOrderFlag =='Y'"  class="btn btn-primary" type="submit"  role="button">
+							<span class="app-glyphicons app-icon-continue_30 btn-icon-font"></span>						
+							<span class="btn-text" ng-if="uiIsPaymentRequired()"  isc-i18n="payment.ACTION_Pay"></span>
+							<span class="btn-text" ng-if="!uiIsPaymentRequired()" isc-i18n="payment.ACTION_Finish"></span>
+						</button>
+						
+						
+						<button ng-disabled="ui.remainingAmount > 0 && false " ng-if="model.getCompleteOrderDetails.Order.DraftOrderFlag =='N' && ui.paymentAction=='Pay'"  class="btn btn-primary" type="submit"  role="button">
+							<span class="app-glyphicons app-icon-continue_30 btn-icon-font"></span>						
+							<span class="btn-text" isc-i18n="payment.ACTION_Pay" ></span>
+						</button>
+						
+						<button ng-if="ui.paymentAction=='Refund' || ui.paymentAction=='Nochange'" class="btn btn-primary" type="submit"  role="button">
+							<span class="app-glyphicons app-icon-continue_30 btn-icon-font"></span>						
+							<span class="btn-text"  isc-i18n="payment.ACTION_Finish"></span> 
+						</button>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="tile-layout accent-panel" role="region" isc-i18n="[aria-label]payment.aria_orderDetailsRegion">
+			<div class="accent-header">
+				<div class="order-number">			 
+					<label class="hash-number-align" isc-i18n="globals.LABEL_Order_#" ></label> 
+					<span ng-bind="ui.wizardOrderModel.Order.OrderNo"></span>
+				</div>
+				<div class="customer-card">
+					<div>
+						<span class="app-glyphicons app-icon-customer_30 icon-font" isc-i18n="[title]globals.LABEL_Customer" ng-if="model.getCompleteOrderDetails.Order.CustomerFirstName"></span>
+						<div class="customer-name" name="lblName" 
+							isc-i18n="[i18n]({firstname:'{{model.getCompleteOrderDetails.Order.CustomerFirstName}}',
+							lastname:'{{model.getCompleteOrderDetails.Order.CustomerLastName}}'})address.LABEL_Display_name">
+						</div>
+					</div>
+				</div>       
+				<div class="order-total">
+					<label class="hash-number-align" isc-i18n="[sep]globals.LABEL_Order_Total"></label>
+					<span ng-bind="model.getCompleteOrderDetails.Order.OverallTotals.GrandTotal | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency"></span>
+				</div>
+			</div>	
+		</div>	
+		<div class="remaining-total tile-layout" role="alert" aria-live="assertive" ng-class="{'show-remaining-total':(ui.remainingAmount != 0)}">
+			<span class="app-glyphicons app-icon-warning_30"></span>
+			<span ng-if="ui.remainingAmount > 0 && model.newPaymentMethods.newPaymentMethod.length === 0 && (!model.getCompleteOrderDetails.Order.PaymentMethods || !model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod || model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod.length === 0)" 
+				class="grp-hdr-txt" isc-i18n="[i18n]({amount:'{{ui.remainingAmount | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency}}'})payment.LABEL_Remaining_Capture_Amount_NoPayment"></span>
+			<span ng-if="ui.remainingAmount > 0 && (model.newPaymentMethods.newPaymentMethod.length != 0
+																|| (model.getCompleteOrderDetails.Order && model.getCompleteOrderDetails.Order.PaymentMethods && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod.length != 0))"
+				class="grp-hdr-txt" isc-i18n="[i18n]({amount:'{{ui.remainingAmount | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency}}'})payment.LABEL_Remaining_Capture_Amount"></span>
+			<span ng-if="ui.remainingAmount < 0 && (model.newPaymentMethods.newPaymentMethod.length != 0
+																|| (model.getCompleteOrderDetails.Order && model.getCompleteOrderDetails.Order.PaymentMethods && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod.length != 0))"
+				class="grp-hdr-txt" isc-i18n="[i18n]({amount:'{{0 - ui.remainingAmount | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency}}'})payment.LABEL_Excess_Capture_Amount"></span>
+	           
+	           	
+		</div>
+		
+		<!-- <div class="remaining-total tile-layout" role="alert" aria-live="assertive" ng-class="{'show-remaining-total':(ui.remainingAmount == 0)}">
+			<span class="app-glyphicons app-icon-about_30" ng-if="model.getCompleteOrderDetails.Order && model.getCompleteOrderDetails.Order.DraftOrderFlag=='N' && ui.refundAmount > 0"></span>
+			<span ng-if="model.getCompleteOrderDetails.Order && model.getCompleteOrderDetails.Order.DraftOrderFlag=='N' && ui.refundAmount > 0"
+				class="grp-hdr-txt" isc-i18n="[i18n]({refundamount:'{{ui.refundAmount | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency}}'})payment.LABEL_Refund_Amount"></span>
+		</div> -->
+		
+		<div class="tile-layout screen-message info-message has-label-icon has-transition" role="alert" aria-live="assertive" 
+			ng-class="{'show-transition':(ui.refundAmount > 0)}" ng-if="model.getCompleteOrderDetails.Order && model.getCompleteOrderDetails.Order.DraftOrderFlag=='N' && ui.refundAmount > 0">
+			<div>
+				<span class="app-glyphicons app-icon-about_30"></span>
+				<span class="grp-hdr-txt" isc-i18n="[i18n]({'refundamount':'{{ui.refundAmount | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency}}','orderTotal':'{{model.getCompleteOrderDetails.Order.OverallTotals.GrandTotal | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency}}'}) payment.LABEL_Refund_Amount" ></span>
+	        </div>
+        </div>
+        
+        <div class="tile-layout screen-message info-message has-label-icon has-transition" role="alert" aria-live="assertive" 
+			ng-class="{'show-transition':(ui.paymentAction=='Nochange')}" ng-if="ui.paymentAction=='Nochange'">
+			<div>
+				<span class="app-glyphicons app-icon-about_30"></span>
+				<span class="grp-hdr-txt" isc-i18n="payment.LABEL_NoChangeInOrderTotal" ></span>
+	        </div>
+        </div>
+        <div class="tile-layout ">
+            <div class="view-cart-pricing-panel">
+                <div class="grp-hdr-text-h1 row">
+                    <span isc-i18n="globals.LABEL_Order_Total" class="category col-xs-6 col-sm-6 col-md-6"></span>
+                    <span ng-bind="model.getCompleteOrderDetails.Order.OverallTotals.GrandTotal | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency" class="category-value col-xs-6 col-sm-6 col-md-6"></span>
+                </div>
+
+                <div class="grp-hdr-text-h3 row">
+                    <span isc-i18n="[i18n]({count:{{model.orderLineList.OrderLineList.TotalNumberOfRecords || 0}} }) globals.LABEL_OrderLineCount" class="category col-xs-6 col-sm-6 col-md-6"></span>
+                    <span ng-bind="model.getCompleteOrderDetails.Order.OverallTotals.LineSubTotal | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency" class="category-value col-xs-6 col-sm-6 col-md-6"></span>
+                </div>
+
+                <div class="grp-hdr-text-h3 row">
+
+                        <span isc-i18n="globals.LABEL_Grand_Charges" class="category col-xs-6 col-sm-6 col-md-6"></span>
+                        <span ng-bind="model.getCompleteOrderDetails.Order.OverallTotals.GrandCharges | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency" class="category-value col-xs-6 col-sm-6 col-md-6"></span>
+
+                        <span isc-i18n="globals.LABEL_Tax" class="category col-xs-6 col-sm-6 col-md-6"></span>
+                        <span ng-bind="model.getCompleteOrderDetails.Order.OverallTotals.GrandTax | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency" class="category-value col-xs-6 col-sm-6 col-md-6"></span>
+
+                </div>
+
+                <div class="grp-hdr-text-h3 row">
+                    <span class="col-xs-6 col-sm-6 col-md-6">
+                        <span class="app-glyphicons app-icon-expand"></span>
+                        <span class="category" isc-i18n="globals.LABEL_Grand_Discount"></span>
+                    </span>
+                    <span ng-bind="model.getCompleteOrderDetails.Order.OverallTotals.GrandDiscount | iscCurrency:model.getCompleteOrderDetails.Order.PriceInfo.Currency" class="category-value col-xs-6 col-sm-6 col-md-6"></span>
+                </div>
+            </div>
+        </div>	
+		<div ng-hide="true" class="tile-layout show-payment-details" role="region" isc-i18n="[aria-label]payment.aria_paymentMethodsRegion">
+
+			<ul class="tile-layout repeating-panel-holder">
+				<li ng-repeat="paymentMethod in model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod" class="repeating-panel" ng-class="{'edit-mode':paymentMethod.DetailView === 'Y','':paymentMethod.DetailView != 'Y'}">
+					<div>
+						<div class="payment-method-action">
+		 					<a ng-if="paymentMethod.DetailView === 'N'" class="glyphicon glyphicon-edit anchor-icon" ng-click="uiExpandPayment(paymentMethod)" isc-i18n="[title]payment.ACTION_Edit" href="" aria-describedby="pc_paymentType_order_pc_old_{{$index}} pc_uniqueidentifier_order_pc_old_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_editExistingPaymentMethod"></span>
+							</a>							
+		 					<a ng-if="paymentMethod.DetailView  === 'Y'" class="app-glyphicons app-icon-collapse anchor-icon" ng-click="uiCollapsePayment(paymentMethod)" isc-i18n="[title]payment.ACTION_Collapse" href="" aria-describedby="pc_paymentType_order_pc_old_{{$index}} pc_uniqueidentifier_order_pc_old_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_collapseExistingPaymentMethod"></span>
+							</a>
+		 					<a ng-if="'Y' != paymentMethod.SuspendAnyMoreCharges" class="app-glyphicons app-icon-delete_30 anchor-icon" ng-click="uiRemovePayment(paymentMethod)" isc-i18n="[title]payment.ACTION_Remove" href="" aria-describedby="pc_paymentType_order_pc_old_{{$index}} pc_uniqueidentifier_order_pc_old_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_removeExistingPaymentMethod"></span>
+							</a>
+							<a ng-if="'Y' === paymentMethod.SuspendAnyMoreCharges  || 'B' === paymentMethod.SuspendAnyMoreCharges" class="app-glyphicons app-icon-resume_30 link-icon anchor-icon" ng-click="uiResumePayment(paymentMethod)" isc-i18n="[title]payment.ACTION_ResumePayment" href="" aria-describedby="pc_paymentType_order_pc_old_{{$index}} pc_uniqueidentifier_order_pc_old_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_resumeExistingPaymentMethod"></span>
+							</a>							
+						</div> 
+						<div ng-repeat="paymentTransactionError in paymentMethod.ProcessChargeTransactionDetail.ChargeTransactionDetail.PaymentTransactionErrorList.PaymentTransactionError">
+							<span class="error-text" ng-bind="paymentTransactionError.Message"></span>
+						</div>
+						<!-- <div ng-if="paymentMethod.IncompletePaymentType === 'Y'">
+							<label class="error-text" isc-i18n="payment.IncompletePaymentError"></label>
+						</div> -->
+						<isc-payment-capture remaining-amount="ui.remainingAmount" payment-currency="model.getCompleteOrderDetails.Order.PriceInfo.Currency" action-clicked="ui.actionClicked" payment-identifier="'paymentMethodOld_'+$index" payment-type-list="model.getPaymentTypeList.PaymentTypeList.PaymentType" payment-method="paymentMethod" mode="'edit'"
+							currency-list="model.getCurrencyList" payment-card-type-list="model.getPaymentCardTypeList" rule-details-name="model.getRuleDetails_CCName"
+							rule-details-real-time-auth="model.getRulesDetails_ReatTimeAuth" encrypt-enabled="ui.encryptEnabled" use-shp-address-for-bill="ui.useShpAddressForBill"
+							country-list="model.getCountryList.CommonCodeList.CommonCode" unique-id-suffix="'order_pc_old_'+$index"> </isc-payment-capture>
+			
+					</div>
+				</li>
+				<li ng-repeat="newPaymentMethod in model.newPaymentMethods.newPaymentMethod" class="repeating-panel" ng-class="{'edit-mode':newPaymentMethod.DetailView === 'Y','':newPaymentMethod.DetailView != 'Y'}">
+					<div>
+						<div class="payment-method-action">
+		 					<a ng-if="newPaymentMethod.DetailView === 'N'" class="glyphicon glyphicon-edit anchor-icon" ng-click="uiExpandPayment(newPaymentMethod)" isc-i18n="[title]payment.ACTION_Edit" href="" aria-describedby="pc_paymentType_order_pc_new_{{$index}} pc_uniqueidentifier_order_pc_new_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_editNewPaymentMethod"></span>
+							</a>							
+		 					<a ng-if="newPaymentMethod.DetailView  === 'Y'" class="app-glyphicons app-icon-collapse anchor-icon" ng-click="uiCollapsePayment(newPaymentMethod)" isc-i18n="[title]payment.ACTION_Collapse" href="" aria-describedby="pc_paymentType_order_pc_new_{{$index}} pc_uniqueidentifier_order_pc_new_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_collapseNewPaymentMethod"></span>
+							</a>
+		 					<a ng-if="'Y' != newPaymentMethod.SuspendAnyMoreCharges" class="app-glyphicons app-icon-delete_30 anchor-icon" ng-click="uiRemovePaymentPanel($index)" isc-i18n="[title]payment.ACTION_Remove" href="" aria-describedby="pc_paymentType_order_pc_new_{{$index}} pc_uniqueidentifier_order_pc_new_{{$index}}"> 
+								<span class="sr-only" isc-i18n="[i18n]({'paymentMethodNumber':'{{$index+1}}'})returns.aria_removeNewPaymentMethod"></span>
+							</a>							
+						</div> 
+						<isc-payment-capture customer="{'CustomerID':model.getCompleteOrderDetails.Order.BillToID}" remaining-amount="ui.remainingAmount" payment-currency="model.getCompleteOrderDetails.Order.PriceInfo.Currency" action-clicked="ui.actionClicked" ng-if="ui.initcomplete" payment-identifier="'paymentMethodNew_'+$index" payment-type-list="model.getPaymentTypeList.PaymentTypeList.PaymentType" payment-method="newPaymentMethod" mode="'add'"
+							currency-list="model.getCurrencyList" payment-card-type-list="model.getPaymentCardTypeList" rule-details-name="model.getRuleDetails_CCName"
+							rule-details-real-time-auth="model.getRulesDetails_ReatTimeAuth" use-shp-address-for-bill="newPaymentMethod.useShpAddressForBill" 
+							country-list="model.getCountryList.CommonCodeList.CommonCode" encrypt-enabled="ui.encryptEnabled" re-init-padss="ui.reInitPadss" 
+							billing-address-list="model.getCompleteOrderDetails.Order.ShippingAddressList" unique-id-suffix="'order_pc_new_'+$index">
+						</isc-payment-capture>
+					</div>
+				</li>
+			</ul>
+			<!--<div ng-if="model.newPaymentMethods.newPaymentMethod.length > 0 || 
+				(model.getCompleteOrderDetails.Order.PaymentMethods && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod 
+				&& model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod.length > 0)" class="tile-layout">
+				<button class="btn btn-default btn-primary payment-type-save" type="button"  role="button" aria-label="" ng-click="uiSavePayment()"
+					isc-i18n="globals.ACTION_Save">
+				</button>
+			</div> -->
+			<div ng-if="model.newPaymentMethods.newPaymentMethod.length === 0 && (!model.getCompleteOrderDetails.Order.PaymentMethods || !model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod || model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod.length === 0)" 
+				class="payment-method-none">
+				<div class="payment-none-holder">
+					<span isc-i18n="payment.NoPaymentMessageLine1" ></span> 
+					<span isc-i18n="payment.NoPaymentMessageLine2" ></span> 
+					<div class="no-payment-action">
+						<a isc-focus="true" ng-click="uiAddNewPaymentPanel()" href="#" class="primary-link-text link-image">
+							<span class="app-glyphicons app-icon-add_30 link-icon anchor-icon"></span>
+							<span class="link-text" isc-i18n="payment.ACTION_AddOne"></span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="new-payment-method tile-layout" ng-if="model.newPaymentMethods.newPaymentMethod.length != 0
+																|| (model.getCompleteOrderDetails.Order && model.getCompleteOrderDetails.Order.PaymentMethods && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod && model.getCompleteOrderDetails.Order.PaymentMethods.PaymentMethod.length != 0)">
+				<a href="" ng-click="uiAddNewPaymentPanel()" class="primary-link-text link-image">
+					<span class="app-glyphicons app-icon-add_30 link-icon anchor-icon"></span>
+					<span class="link-text" isc-i18n="payment.ACTION_Add"></span>
+				</a>
+			</div>
+		</div>
+	</div>
+</form>
+</div>
